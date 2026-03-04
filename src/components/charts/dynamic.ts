@@ -72,3 +72,8 @@ export const QuadrantScatter = dynamic(
   () => import('./QuadrantScatter').then((m) => ({ default: m.QuadrantScatter })),
   { ssr: false, loading: skeleton(340) }
 )
+
+export const BudgetEfficiencyScoreCard = dynamic(
+  () => import('./BudgetEfficiencyScoreCard').then((m) => ({ default: m.BudgetEfficiencyScoreCard })),
+  { ssr: false, loading: skeleton(400) }
+)
