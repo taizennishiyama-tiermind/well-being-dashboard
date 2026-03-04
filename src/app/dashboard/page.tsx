@@ -262,11 +262,11 @@ export default function DashboardPage() {
           <CardHeader>
             <h2 className="text-std-17B-170 text-solid-gray-900">主観-客観 4象限マップ</h2>
             <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">
-              住民アンケート平均値と統計データの関係性をプロット
+              住民アンケートと統計データの関係性（基準: 全国平均）
             </p>
           </CardHeader>
           <CardBody>
-            <QuadrantScatter data={aggregated} height={320} />
+            <QuadrantScatter data={aggregated} height={380} />
           </CardBody>
         </Card>
 
