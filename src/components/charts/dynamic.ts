@@ -67,3 +67,8 @@ export const IndicatorComparisonBar = dynamic(
   () => import('./IndicatorComparisonBar').then((m) => ({ default: m.IndicatorComparisonBar })),
   { ssr: false, loading: skeleton(300) }
 )
+
+export const QuadrantScatter = dynamic(
+  () => import('./QuadrantScatter').then((m) => ({ default: m.QuadrantScatter })),
+  { ssr: false, loading: skeleton(340) }
+)

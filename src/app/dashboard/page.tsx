@@ -7,7 +7,7 @@ import { ScoreGauge, MiniGauge } from '@/components/ui/ScoreGauge'
 import { StatusBadge, StatusBar } from '@/components/ui/StatusBadge'
 import { CategoryIcon } from '@/components/ui/CategoryIcon'
 import { IllustrationPanel } from '@/components/ui/IllustrationPanel'
-import { WellBeingRadar, TrendLineChart, DistributionBar, DemographicBar, GapChart } from '@/components/charts/dynamic'
+import { WellBeingRadar, TrendLineChart, DistributionBar, DemographicBar, GapChart, QuadrantScatter } from '@/components/charts/dynamic'
 import { getResidents } from '@/data/sampleData'
 import {
   aggregateCategories,
@@ -39,7 +39,7 @@ function getStatusBorderColor(status: string): string {
 type DemoTab = 'region' | 'age'
 
 export default function DashboardPage() {
-  const [showAllCategories, setShowAllCategories] = useState(false)
+  const [showAllCategories, setShowAllCategories] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null)
   const [demoTab, setDemoTab] = useState<DemoTab>('region')
 
@@ -256,37 +256,54 @@ export default function DashboardPage() {
         </section>
       )}
 
-      {/* Gap Analysis + Trend */}
+      {/* 4-Quadrant Scatter + Gap Bar */}
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <h2 className="text-std-17B-170 text-solid-gray-900">主観-客観ギャップ分析</h2>
-            <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">各カテゴリの主観・客観スコア比較</p>
+            <h2 className="text-std-17B-170 text-solid-gray-900">主観-客観 4象限マップ</h2>
+            <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">
+              住民アンケート平均値と統計データの関係性をプロット
+            </p>
           </CardHeader>
           <CardBody>
-            <GapChart data={aggregated} height={280} />
+            <QuadrantScatter data={aggregated} height={320} />
           </CardBody>
         </Card>
 
         <Card>
           <CardHeader>
+            <h2 className="text-std-17B-170 text-solid-gray-900">主観-客観ギャップ分析</h2>
+            <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">各カテゴリの主観・客観スコア比較（棒グラフ）</p>
+          </CardHeader>
+          <CardBody>
+            <GapChart data={aggregated} height={280} />
+          </CardBody>
+        </Card>
+      </section>
+
+      {/* Trend */}
+      <section>
+        <Card>
+          <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-std-17B-170 text-solid-gray-900">トレンド推移</h2>
-                <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">過去12ヶ月間のスコア推移</p>
+                <h2 className="text-std-17B-170 text-solid-gray-900">スコアトレンド推移</h2>
+                <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">
+                  住民アンケート回答者の月別平均スコア（主観+客観の総合値）
+                </p>
               </div>
               <button
                 onClick={() => setShowAllCategories(!showAllCategories)}
                 className="text-oln-14B-100 text-blue-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 rounded-4 px-2 py-1"
               >
-                {showAllCategories ? '総合のみ' : 'カテゴリも表示'}
+                {showAllCategories ? '総合のみ' : 'カテゴリ別も表示'}
               </button>
             </div>
           </CardHeader>
           <CardBody>
             <TrendLineChart
               data={MONTHLY_TRENDS}
-              height={280}
+              height={300}
               showCategories={showAllCategories}
             />
           </CardBody>

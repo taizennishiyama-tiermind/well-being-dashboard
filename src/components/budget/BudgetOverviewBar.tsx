@@ -61,7 +61,9 @@ export function BudgetOverviewBar({ wbRatio, executionRate, avgChangeRate, flowD
               収支{flowData.balance >= 0 ? '（黒字）' : '（赤字）'}
             </p>
             <p className={flowData.balance >= 0 ? 'text-green-900' : 'text-red-900'}>
-              <span className="text-std-17B-170 mr-0.5">{flowData.balance >= 0 ? '▲' : '▼'}</span>
+              {flowData.balance < 0 && (
+                <span className="text-std-17B-170 mr-0.5">▼</span>
+              )}
               <span className="text-std-24B-150">{balance.integer}</span>
               <span className="text-std-17B-170">億</span>
               <span className="text-std-24B-150">{balance.remainder}</span>
