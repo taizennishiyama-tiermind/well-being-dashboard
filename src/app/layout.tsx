@@ -15,10 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className="antialiased pt-24 flex flex-col min-h-screen">
+      <body className="antialiased pt-[68px] sm:pt-24 flex flex-col min-h-screen">
         <Header />
         <div className="flex-grow">{children}</div>
-        <div className="mt-0 sm:mt-16">
+        <div className="mt-8 sm:mt-16">
           <Footer />
         </div>
       </body>

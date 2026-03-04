@@ -12,10 +12,10 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-[#0A1029] px-8 lg:px-[117px] pt-12 pb-8">
+    <footer className="w-full bg-[#0A1029] px-5 sm:px-8 lg:px-[117px] pt-8 sm:pt-12 pb-6 sm:pb-8">
       <div className="max-w-[1280px] mx-auto">
         {/* Top section */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 pb-8 border-b border-white/10">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 sm:gap-8 pb-6 sm:pb-8 border-b border-white/10">
           {/* Branding */}
           <div className="flex flex-col gap-3">
             <p className="text-[20px] font-bold text-white tracking-wide">
@@ -31,7 +31,7 @@ export function Footer() {
             <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest">
               ページ一覧
             </p>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
               {FOOTER_LINKS.map((link) => (
                 <Link
                   key={link.href}
@@ -48,7 +48,7 @@ export function Footer() {
         {/* Bottom section */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6">
           <p className="text-[12px] text-white/30">
-            &copy; 2025 Well-Being指標ダッシュボード
+            &copy; 2026 Well-Being指標ダッシュボード
           </p>
           <p className="text-[11px] text-white/25">
             サンプルデータ300人分 / デジタル庁デザインシステム準拠

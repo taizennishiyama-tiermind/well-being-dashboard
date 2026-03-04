@@ -40,7 +40,7 @@ export default function IndicatorsPage() {
     : []
 
   return (
-    <main className="page-enter mx-auto max-w-[1280px] px-5 xl:px-0 py-5 sm:py-6 space-y-12">
+    <main className="page-enter mx-auto max-w-[1280px] px-3 sm:px-5 xl:px-0 py-4 sm:py-6 space-y-8 sm:space-y-12">
       {/* Page Header */}
       <div className="flex items-center gap-3">
         <Image src="/icons/information_fill.svg" alt="" width={24} height={24} className="opacity-60" />
@@ -53,7 +53,7 @@ export default function IndicatorsPage() {
       </div>
 
       {/* Domain Selector — Card-based 3-column */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {OBJECTIVE_DOMAINS.map((d) => {
           const isActive = d.id === selectedDomain
           const avg = getDomainAverageScore(d.id)
@@ -271,7 +271,7 @@ export default function IndicatorsPage() {
               <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">{selectedMeta.description}</p>
             </CardHeader>
             <CardBody>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {/* Score & Comparison */}
                 <div>
                   <div className="text-center mb-4">

@@ -18,17 +18,17 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-2.5 py-3 xl:px-6 xl:py-4">
+    <header className="fixed top-0 left-0 right-0 z-40 px-2 py-1.5 sm:px-2.5 sm:py-3 xl:px-6 xl:py-4">
       {/* Main Header Container with rounded background (marumie pattern) */}
-      <div className="bg-white rounded-[20px] px-3 py-3 xl:px-6 xl:py-0 shadow-sm">
-        <div className="flex items-center gap-2 xl:h-16">
+      <div className="bg-white rounded-2xl sm:rounded-[20px] px-3 py-2 sm:py-3 xl:px-6 xl:py-0 shadow-sm">
+        <div className="flex items-center gap-1.5 sm:gap-2 xl:h-16">
           {/* Logo and Title */}
           <Link
             href="/"
-            className="flex items-center gap-2 xl:gap-3 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 hover:opacity-80 transition-opacity"
           >
-            <Image src="/icons/municipality_fill.svg" alt="" width={28} height={28} />
-            <span className="text-[15px] sm:text-[17px] font-bold text-[#1f2937]">
+            <Image src="/icons/municipality_fill.svg" alt="" width={24} height={24} className="sm:w-7 sm:h-7" />
+            <span className="text-[14px] sm:text-[17px] font-bold text-[#1f2937]">
               日高郡 Well-Being指標
             </span>
           </Link>

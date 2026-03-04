@@ -86,7 +86,7 @@ export default function InsightsPage() {
   const hasMoreInsights = processedInsights.length > INITIAL_INSIGHTS_COUNT
 
   return (
-    <main className="page-enter mx-auto max-w-[1280px] px-5 xl:px-0 py-5 sm:py-6 space-y-12">
+    <main className="page-enter mx-auto max-w-[1280px] px-3 sm:px-5 xl:px-0 py-4 sm:py-6 space-y-8 sm:space-y-12">
       {/* Page Header */}
       <div className="flex items-center gap-3">
         <Image src="/icons/information_fill.svg" alt="" width={24} height={24} className="opacity-60" />
@@ -106,8 +106,8 @@ export default function InsightsPage() {
               </div>
               <div className="flex-1">
                 <h2 className="text-std-17B-170 text-solid-gray-900 mb-3">主要な発見</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-4 bg-solid-gray-50 rounded-2xl">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="p-3 sm:p-4 bg-solid-gray-50 rounded-2xl">
                     <p className="text-dns-14N-130 text-solid-gray-500 mb-1">最大ギャップ</p>
                     <div className="flex items-center gap-2">
                       <CategoryIcon categoryId={maxGapCat.id} size={20} />
@@ -255,7 +255,7 @@ export default function InsightsPage() {
             <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">6カテゴリのバランスチャート</p>
           </CardHeader>
           <CardBody>
-            <WellBeingRadar data={radarData} height={350} />
+            <WellBeingRadar data={radarData} height={280} />
           </CardBody>
         </Card>
       </section>
@@ -263,7 +263,7 @@ export default function InsightsPage() {
       {/* Demographic Insights */}
       <section>
         <h2 className="text-std-17B-170 text-solid-gray-900 mb-5">属性別インサイト</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <Card>
             <CardBody className="py-5">
               <div className="flex items-center gap-2 mb-4">
@@ -332,18 +332,18 @@ export default function InsightsPage() {
       {/* Action Summary — Enhanced with first action step from each top insight */}
       <section>
         <Card>
-          <CardBody className="py-8">
+          <CardBody className="py-6 sm:py-8">
             <div className="max-w-3xl mx-auto">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <HandGesture type="thumbsUp" size={40} />
-                <h2 className="text-std-20B-160 text-solid-gray-900">次のアクション</h2>
+              <div className="flex items-center justify-center gap-3 mb-5 sm:mb-6">
+                <HandGesture type="thumbsUp" size={36} />
+                <h2 className="text-[18px] sm:text-std-20B-160 font-bold text-solid-gray-900">次のアクション</h2>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {enhancedInsights.slice(0, 3).map((insight, i) => {
                   const sevStyle = SEVERITY_STYLES[insight.severity]
                   const firstStep = insight.actionSteps[0]
                   return (
-                    <div key={insight.id} className="flex gap-3 p-4 bg-white rounded-2xl border border-[#E5E7EB]">
+                    <div key={insight.id} className="flex gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-[#E5E7EB]">
                       <span className="w-7 h-7 rounded-full bg-blue-900 text-white text-oln-14B-100 flex items-center justify-center flex-shrink-0">
                         {i + 1}
                       </span>

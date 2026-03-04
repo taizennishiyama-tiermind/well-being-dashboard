@@ -99,9 +99,9 @@ export default function BudgetPage() {
   )
 
   return (
-    <main className="page-enter mx-auto max-w-[1280px] px-5 xl:px-0 py-5 sm:py-6 space-y-10">
+    <main className="page-enter mx-auto max-w-[1280px] px-3 sm:px-5 xl:px-0 py-4 sm:py-6 space-y-8 sm:space-y-10">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Image src="/icons/work_fill.svg" alt="" width={24} height={24} className="opacity-60" />
           <div>
@@ -111,12 +111,12 @@ export default function BudgetPage() {
             </p>
           </div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1">
           {(['2021', '2022', '2023', '2024', '2025'] as const).map((fy) => (
             <button
               key={fy}
               onClick={() => setSelectedFY(fy)}
-              className={`px-4 py-2 rounded-8 text-oln-14B-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-8 text-[12px] sm:text-oln-14B-100 font-bold transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 ${
                 selectedFY === fy
                   ? 'bg-blue-900 text-white'
                   : 'bg-solid-gray-50 text-solid-gray-600 hover:bg-solid-gray-100'
@@ -148,7 +148,7 @@ export default function BudgetPage() {
             </p>
           </CardHeader>
           <CardBody>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               <div>
                 <div className="flex items-baseline gap-2 mb-3">
                   <h3 className="text-std-16B-170 text-solid-gray-900">歳出構成（目的別）</h3>
@@ -213,8 +213,8 @@ export default function BudgetPage() {
 
       {/* Section 6: Pipeline Cards (メインビジュアライゼーション) */}
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-std-20B-160 text-solid-gray-900">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <h2 className="text-[18px] sm:text-std-20B-160 font-bold text-solid-gray-900">
             カテゴリ別 投入→成果パイプライン
           </h2>
           <div className="flex gap-1">
@@ -222,7 +222,7 @@ export default function BudgetPage() {
               <button
                 key={opt.key}
                 onClick={() => setSortKey(opt.key)}
-                className={`px-3 py-1.5 rounded-8 text-oln-14B-100 transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-8 text-[12px] sm:text-oln-14B-100 font-bold transition-colors ${
                   sortKey === opt.key
                     ? 'bg-blue-900 text-white'
                     : 'bg-solid-gray-50 text-solid-gray-600 hover:bg-solid-gray-100'
@@ -233,7 +233,7 @@ export default function BudgetPage() {
             ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {pipelineData.map((data) => (
             <CategoryPipelineCard key={data.categoryId} data={data} />
           ))}
@@ -246,14 +246,14 @@ export default function BudgetPage() {
           <CardHeader>
             <h2 className="text-std-17B-170 text-solid-gray-900">カテゴリ別予算一覧</h2>
           </CardHeader>
-          <CardBody className="overflow-x-auto">
-            <table className="w-full text-left">
+          <CardBody className="overflow-x-auto -mx-2 px-2">
+            <table className="w-full text-left min-w-[400px]">
               <thead>
                 <tr className="border-b-2 border-solid-gray-300">
-                  <th className="py-3 px-3 text-oln-14B-100 text-solid-gray-600">カテゴリ</th>
-                  <th className="py-3 px-3 text-oln-14B-100 text-solid-gray-600 text-right">予算</th>
-                  <th className="py-3 px-3 text-oln-14B-100 text-solid-gray-600 text-right">執行率</th>
-                  <th className="py-3 px-3 text-oln-14B-100 text-solid-gray-600 text-right">前年比</th>
+                  <th className="py-2 sm:py-3 px-2 sm:px-3 text-[12px] sm:text-oln-14B-100 font-bold text-solid-gray-600">カテゴリ</th>
+                  <th className="py-2 sm:py-3 px-2 sm:px-3 text-[12px] sm:text-oln-14B-100 font-bold text-solid-gray-600 text-right">予算</th>
+                  <th className="py-2 sm:py-3 px-2 sm:px-3 text-[12px] sm:text-oln-14B-100 font-bold text-solid-gray-600 text-right">執行率</th>
+                  <th className="py-2 sm:py-3 px-2 sm:px-3 text-[12px] sm:text-oln-14B-100 font-bold text-solid-gray-600 text-right">前年比</th>
                 </tr>
               </thead>
               <tbody>
@@ -299,14 +299,14 @@ export default function BudgetPage() {
                 return (
                   <div
                     key={program.id}
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-solid-gray-50"
+                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-solid-gray-50"
                   >
-                    <span className="w-7 h-7 rounded-full bg-solid-gray-200 flex items-center justify-center text-oln-14B-100 text-solid-gray-600 flex-shrink-0">
+                    <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-solid-gray-200 flex items-center justify-center text-[12px] sm:text-oln-14B-100 font-bold text-solid-gray-600 flex-shrink-0">
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-std-16B-170 text-solid-gray-900 truncate">{program.name}</span>
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-[14px] sm:text-std-16B-170 font-bold text-solid-gray-900 truncate">{program.name}</span>
                         <span
                           className="px-2 py-0.5 rounded-4 text-dns-14N-130 text-white flex-shrink-0"
                           style={{ backgroundColor: meta?.color ?? '#666', fontSize: 10 }}

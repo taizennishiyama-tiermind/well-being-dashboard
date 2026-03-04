@@ -180,7 +180,7 @@ export function EnhancedInsightCard({ insight }: EnhancedInsightCardProps) {
                   {insight.relatedIndicators.slice(0, 5).map((ind) => {
                     const diff = ind.score - ind.nationalAverage
                     return (
-                      <div key={ind.id} className="flex items-center gap-2 py-1.5 border-b border-solid-gray-50 last:border-0">
+                      <div key={ind.id} className="flex items-center gap-1.5 sm:gap-2 py-1.5 border-b border-solid-gray-50 last:border-0 flex-wrap sm:flex-nowrap">
                         <DataTypeBadge type="客観" />
                         <span className="flex-1 text-dns-14N-130 text-solid-gray-700 truncate min-w-0">
                           {ind.label}
@@ -192,7 +192,7 @@ export function EnhancedInsightCard({ insight }: EnhancedInsightCardProps) {
                         <span className={`text-[11px] flex-shrink-0 w-16 text-right ${diff < 0 ? 'text-red-900' : 'text-cyan-900'}`}>
                           全国比{diff > 0 ? '+' : ''}{diff.toFixed(1)}
                         </span>
-                        <span className="text-[10px] text-solid-gray-400 flex-shrink-0 w-14 text-right">
+                        <span className="hidden sm:inline text-[10px] text-solid-gray-400 flex-shrink-0 w-14 text-right">
                           {ind.rank}/{ind.totalMunicipalities}位
                         </span>
                       </div>

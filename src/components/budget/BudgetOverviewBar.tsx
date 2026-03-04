@@ -37,7 +37,7 @@ export function BudgetOverviewBar({ wbRatio, executionRate, avgChangeRate, flowD
       </CardHeader>
       <CardBody>
         {/* Revenue / Expenditure / Balance */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="border-2 border-solid-gray-200 rounded-2xl p-4">
             <p className="text-dns-14N-130 text-green-900 mb-1">歳入総額</p>
             <p className="text-solid-gray-900">
@@ -73,7 +73,7 @@ export function BudgetOverviewBar({ wbRatio, executionRate, avgChangeRate, flowD
         </div>
 
         {/* WB Stats Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div className="text-center p-3 rounded-2xl bg-solid-gray-50">
             <p className="text-dns-14N-130 text-solid-gray-500 mb-1">Well-Being関連予算</p>
             <p className="text-std-24B-150 text-blue-900">

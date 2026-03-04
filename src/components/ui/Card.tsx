@@ -15,7 +15,7 @@ export function Card({ children, className = '', accent, id }: CardProps) {
   return (
     <div
       id={id}
-      className={`bg-white rounded-[24px] border border-[#E5E7EB] scroll-mt-24 ${className}`}
+      className={`bg-white rounded-2xl sm:rounded-[24px] border border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24 ${className}`}
       style={accent ? { borderTopWidth: 3, borderTopColor: accent } : undefined}
     >
       {children}
@@ -32,7 +32,7 @@ interface CardHeaderProps {
 
 export function CardHeader({ children, className = '' }: CardHeaderProps) {
   return (
-    <div className={`px-6 pt-8 pb-3 sm:px-10 sm:pt-10 ${className}`}>
+    <div className={`px-4 pt-5 pb-2 sm:px-6 sm:pt-8 sm:pb-3 md:px-10 md:pt-10 ${className}`}>
       {children}
     </div>
   )
@@ -46,7 +46,7 @@ interface CardBodyProps {
 }
 
 export function CardBody({ children, className = '' }: CardBodyProps) {
-  return <div className={`px-6 pb-8 sm:px-10 sm:pb-10 ${className}`}>{children}</div>
+  return <div className={`px-4 pb-5 sm:px-6 sm:pb-8 md:px-10 md:pb-10 ${className}`}>{children}</div>
 }
 
 // ===== BaseCard (simple inner card - marumie pattern) =====
