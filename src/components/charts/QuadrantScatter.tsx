@@ -27,14 +27,16 @@ const QUADRANT_LABELS = [
   { position: 'bottomRight', text: '客観充実・実感不足', color: '#264AF4' },
 ] as const
 
+interface ChartPoint {
+  readonly name: string
+  readonly subjective: number
+  readonly objective: number
+  readonly color: string
+  readonly gap: number
+}
+
 interface ScatterPayloadEntry {
-  readonly payload: {
-    readonly name: string
-    readonly subjective: number
-    readonly objective: number
-    readonly color: string
-    readonly gap: number
-  }
+  readonly payload: ChartPoint
 }
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: readonly ScatterPayloadEntry[] }) {
@@ -55,27 +57,22 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: readon
   )
 }
 
-interface DotProps {
-  readonly cx: number
-  readonly cy: number
-  readonly payload: {
-    readonly name: string
-    readonly color: string
-  }
-}
+function renderDot(props: { cx?: number; cy?: number; payload?: ChartPoint }) {
+  const { cx, cy, payload } = props
+  if (cx == null || cy == null || !payload) return null
+  const color = payload.color || '#666'
 
-function CustomDot({ cx, cy, payload }: DotProps) {
   return (
     <g>
-      <circle cx={cx} cy={cy} r={18} fill={payload.color} fillOpacity={0.15} />
-      <circle cx={cx} cy={cy} r={7} fill={payload.color} stroke="white" strokeWidth={2} />
+      <circle cx={cx} cy={cy} r={20} fill={color} fillOpacity={0.12} />
+      <circle cx={cx} cy={cy} r={8} fill={color} stroke="white" strokeWidth={2} />
       <text
         x={cx}
-        y={cy - 14}
+        y={cy - 16}
         textAnchor="middle"
-        fontSize={10}
+        fontSize={11}
         fontWeight="bold"
-        fill={payload.color}
+        fill={color}
       >
         {payload.name}
       </text>
@@ -90,7 +87,7 @@ export const QuadrantScatter = memo(function QuadrantScatter({
   const subjectiveMean = data.reduce((s, d) => s + d.avgSubjective, 0) / data.length
   const objectiveMean = data.reduce((s, d) => s + d.avgObjective, 0) / data.length
 
-  const chartData = data.map((cat) => {
+  const chartData: ChartPoint[] = data.map((cat) => {
     const meta = CATEGORIES.find((c) => c.id === cat.id)
     return {
       name: cat.label,
@@ -101,14 +98,16 @@ export const QuadrantScatter = memo(function QuadrantScatter({
     }
   })
 
-  const allValues = data.flatMap((d) => [d.avgSubjective, d.avgObjective])
-  const minVal = Math.floor(Math.min(...allValues) - 0.5)
-  const maxVal = Math.ceil(Math.max(...allValues) + 0.5)
+  const allSubjective = data.map((d) => d.avgSubjective)
+  const allObjective = data.map((d) => d.avgObjective)
+  const allValues = [...allSubjective, ...allObjective]
+  const minVal = Math.floor(Math.min(...allValues) - 1)
+  const maxVal = Math.ceil(Math.max(...allValues) + 1)
 
   return (
     <div>
       <ResponsiveContainer width="100%" height={height}>
-        <ScatterChart margin={{ top: 24, right: 24, left: 8, bottom: 8 }}>
+        <ScatterChart margin={{ top: 30, right: 30, left: 10, bottom: 16 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ECEEF2" />
           <XAxis
             dataKey="objective"
@@ -122,7 +121,7 @@ export const QuadrantScatter = memo(function QuadrantScatter({
             <Label
               value="客観スコア（統計データ）→"
               position="bottom"
-              offset={-4}
+              offset={-2}
               style={{ fontSize: 11, fill: '#757780' }}
             />
           </XAxis>
@@ -136,7 +135,7 @@ export const QuadrantScatter = memo(function QuadrantScatter({
             name="主観スコア"
           >
             <Label
-              value="主観スコア（住民実感）→"
+              value="↑ 主観スコア（住民実感）"
               position="insideLeft"
               angle={-90}
               offset={12}
@@ -147,18 +146,18 @@ export const QuadrantScatter = memo(function QuadrantScatter({
             x={objectiveMean}
             stroke="#757780"
             strokeDasharray="6 3"
-            strokeOpacity={0.5}
+            strokeOpacity={0.6}
           />
           <ReferenceLine
             y={subjectiveMean}
             stroke="#757780"
             strokeDasharray="6 3"
-            strokeOpacity={0.5}
+            strokeOpacity={0.6}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip />} cursor={false} />
           <Scatter
             data={chartData}
-            shape={<CustomDot cx={0} cy={0} payload={{ name: '', color: '' }} />}
+            shape={renderDot}
           />
         </ScatterChart>
       </ResponsiveContainer>
@@ -171,7 +170,7 @@ export const QuadrantScatter = memo(function QuadrantScatter({
             className="flex items-center gap-1.5 text-[11px]"
           >
             <span
-              className="w-2 h-2 rounded-full flex-shrink-0"
+              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: q.color }}
             />
             <span style={{ color: q.color }} className="font-bold">
