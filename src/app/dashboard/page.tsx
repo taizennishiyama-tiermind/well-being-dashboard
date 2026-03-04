@@ -64,7 +64,7 @@ export default function DashboardPage() {
     : []
 
   return (
-    <main className="page-enter mx-auto max-w-[1280px] px-5 xl:px-0 py-5 sm:py-6 space-y-12">
+    <main className="page-enter mx-auto max-w-[1280px] px-3 sm:px-5 xl:px-0 py-4 sm:py-6 space-y-8 sm:space-y-12">
       {/* Page Header */}
       <div className="flex items-center gap-3">
         <Image src="/icons/search_fill.svg" alt="" width={24} height={24} className="opacity-60" />
@@ -75,13 +75,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Overall Score + Radar */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card className="lg:col-span-1">
-          <CardBody className="flex flex-col items-center py-8">
+          <CardBody className="flex flex-col items-center py-6 sm:py-8">
             <ScoreGauge
               score={overall}
-              size={160}
-              strokeWidth={12}
+              size={130}
+              strokeWidth={10}
               label="総合スコア"
             />
             <div className="mt-4">
@@ -100,13 +100,13 @@ export default function DashboardPage() {
           </CardBody>
         </Card>
 
-        <Card className="lg:col-span-2">
+        <Card className="md:col-span-1 lg:col-span-2">
           <CardHeader>
             <h2 className="text-std-17B-170 text-solid-gray-900">カテゴリ別 主観 vs 客観</h2>
             <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">6つのWell-Being指標の全体像</p>
           </CardHeader>
           <CardBody>
-            <WellBeingRadar data={radarData} height={320} />
+            <WellBeingRadar data={radarData} height={280} />
           </CardBody>
         </Card>
       </section>
@@ -130,7 +130,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-std-17B-170 text-solid-gray-900">カテゴリ別スコア</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {aggregated.map((cat) => {
             const avg = (cat.avgSubjective + cat.avgObjective) / 2
             const status = getStatusLevel(avg)
@@ -257,7 +257,7 @@ export default function DashboardPage() {
       )}
 
       {/* 4-Quadrant Scatter + Gap Bar */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
             <h2 className="text-std-17B-170 text-solid-gray-900">主観-客観 4象限マップ</h2>
@@ -266,7 +266,7 @@ export default function DashboardPage() {
             </p>
           </CardHeader>
           <CardBody>
-            <QuadrantScatter data={aggregated} height={380} />
+            <QuadrantScatter data={aggregated} height={320} />
           </CardBody>
         </Card>
 
@@ -276,7 +276,7 @@ export default function DashboardPage() {
             <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">各カテゴリの主観・客観スコア比較（棒グラフ）</p>
           </CardHeader>
           <CardBody>
-            <GapChart data={aggregated} height={280} />
+            <GapChart data={aggregated} height={260} />
           </CardBody>
         </Card>
       </section>
@@ -285,16 +285,16 @@ export default function DashboardPage() {
       <section>
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h2 className="text-std-17B-170 text-solid-gray-900">スコアトレンド推移</h2>
                 <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">
-                  住民アンケート回答者の月別平均スコア（主観+客観の総合値）
+                  月別平均スコア（主観+客観の総合値）
                 </p>
               </div>
               <button
                 onClick={() => setShowAllCategories(!showAllCategories)}
-                className="text-oln-14B-100 text-blue-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 rounded-4 px-2 py-1"
+                className="text-oln-14B-100 text-blue-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 rounded-4 px-2 py-1 self-start sm:self-auto"
               >
                 {showAllCategories ? '総合のみ' : 'カテゴリ別も表示'}
               </button>
@@ -303,7 +303,7 @@ export default function DashboardPage() {
           <CardBody>
             <TrendLineChart
               data={MONTHLY_TRENDS}
-              height={300}
+              height={260}
               showCategories={showAllCategories}
             />
           </CardBody>
@@ -311,7 +311,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Distribution + Demographics */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
             <h2 className="text-std-17B-170 text-solid-gray-900">スコア分布</h2>

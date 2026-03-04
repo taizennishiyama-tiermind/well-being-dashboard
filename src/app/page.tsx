@@ -41,10 +41,10 @@ export default function HomePage() {
   const bottomSubs = getBottomSubIndicators(residents, 3)
 
   return (
-    <main className="page-enter mx-auto max-w-[1280px] px-5 xl:px-0 py-5 sm:py-6 space-y-12">
+    <main className="page-enter mx-auto max-w-[1280px] px-3 sm:px-5 xl:px-0 py-4 sm:py-6 space-y-8 sm:space-y-12">
       {/* Hero Section */}
       <section className="text-center">
-        <div className="relative bg-white border border-[#E5E7EB] rounded-[24px] overflow-hidden px-6 py-10 sm:py-14">
+        <div className="relative bg-white border border-[#E5E7EB] rounded-2xl sm:rounded-[24px] overflow-hidden px-4 sm:px-6 py-8 sm:py-14">
           <div className="absolute top-0 right-0 opacity-10">
             <Image
               src="/illustrations/l_01_rectangle_white.png"
@@ -56,43 +56,43 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-900 px-3 py-1 rounded-8 text-oln-14B-100">
-                <Image src="/icons/me_fill.svg" alt="" width={16} height={16} className="opacity-70" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-900 px-2.5 sm:px-3 py-1 rounded-8 text-[12px] sm:text-oln-14B-100 font-bold">
+                <Image src="/icons/me_fill.svg" alt="" width={14} height={14} className="opacity-70 sm:w-4 sm:h-4" />
                 回答者 {residents.length}人
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-900 px-3 py-1 rounded-8 text-oln-14B-100">
-                <Image src="/icons/house_fill.svg" alt="" width={16} height={16} className="opacity-70" />
+              <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-900 px-2.5 sm:px-3 py-1 rounded-8 text-[12px] sm:text-oln-14B-100 font-bold">
+                <Image src="/icons/house_fill.svg" alt="" width={14} height={14} className="opacity-70 sm:w-4 sm:h-4" />
                 7地域
               </span>
             </div>
-            <p className="text-dns-14B-130 text-blue-900 mb-2">
+            <p className="text-[12px] sm:text-dns-14B-130 font-bold text-blue-900 mb-2">
               和歌山県日高郡内7地域の住民データから見える
             </p>
-            <h1 className="text-std-28B-140 sm:text-std-36B-140 text-solid-gray-900 mb-2">
+            <h1 className="text-[22px] sm:text-std-28B-140 md:text-std-36B-140 font-bold leading-tight text-solid-gray-900 mb-2">
               日高郡のWell-Being指標
             </h1>
-            <p className="text-dns-14N-130 text-solid-gray-600 mb-8 max-w-lg mx-auto">
+            <p className="text-[12px] sm:text-dns-14N-130 text-solid-gray-600 mb-6 sm:mb-8 max-w-lg mx-auto">
               住民の実感（主観）と統計データ（客観）の両面から、
               まちの幸福度を6つの分野で可視化します。
             </p>
 
-            <div className="flex flex-col items-center gap-6 mb-8">
-              <ScoreGauge score={overall} size={180} strokeWidth={14} label="総合Well-Beingスコア" />
+            <div className="flex flex-col items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <ScoreGauge score={overall} size={140} strokeWidth={12} label="総合Well-Beingスコア" />
               <IllustrationPanel status={overallStatus} variant="hero" className="h-28" />
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 bg-[#0031D8] text-white px-6 py-3 rounded-2xl text-oln-16B-100 hover:bg-[#0017C1] transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-[#0031D8] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-[14px] sm:text-oln-16B-100 font-bold hover:bg-[#0017C1] transition-colors w-full sm:w-auto"
               >
                 <Image src="/icons/search_fill.svg" alt="" width={18} height={18} className="brightness-0 invert" />
                 ダッシュボードを見る
               </Link>
               <Link
                 href="/insights"
-                className="inline-flex items-center gap-2 border border-[#0031D8] text-[#0031D8] px-6 py-3 rounded-2xl text-oln-16B-100 hover:bg-[#E8F1FE] transition-colors"
+                className="inline-flex items-center justify-center gap-2 border border-[#0031D8] text-[#0031D8] px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-[14px] sm:text-oln-16B-100 font-bold hover:bg-[#E8F1FE] transition-colors w-full sm:w-auto"
               >
                 <Image src="/icons/information_fill.svg" alt="" width={18} height={18} />
                 インサイトを確認
@@ -104,8 +104,8 @@ export default function HomePage() {
 
       {/* Category Overview Grid */}
       <section>
-        <h2 className="text-std-20B-160 text-solid-gray-900 mb-5">6つの指標カテゴリ</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <h2 className="text-std-20B-160 text-solid-gray-900 mb-4 sm:mb-5">6つの指標カテゴリ</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {aggregated.map((cat) => {
             const meta = getCategoryMeta(cat.id)
             const avg = Math.round(((cat.avgSubjective + cat.avgObjective) / 2) * 10) / 10
@@ -156,7 +156,7 @@ export default function HomePage() {
       </section>
 
       {/* Strengths & Weaknesses (Sub-indicator level) */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardBody className="pt-5">
             <div className="flex items-center gap-2 mb-4">
@@ -218,7 +218,7 @@ export default function HomePage() {
 
       {/* Quick Stats */}
       <section>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {[
             { icon: 'me_fill.svg', value: String(residents.length), label: '回答者数' },
             { icon: 'house_fill.svg', value: '7', label: '対象地域' },
