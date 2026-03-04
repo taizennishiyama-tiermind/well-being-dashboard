@@ -80,6 +80,19 @@ export const STATUS_CONFIG: Record<
   critical: { label: '要改善', color: '#D32F2F', bgClass: 'bg-red-100' },
 }
 
+// 予算効率グレード表示設定
+// S: ≥130% efficient, A: 110-129%, B: 90-109%, C: 70-89%, D: <70%
+export const GRADE_CONFIG: Record<
+  import('./types').EfficiencyGrade,
+  { readonly label: string; readonly color: string; readonly bgClass: string; readonly description: string }
+> = {
+  S: { label: 'S', color: '#0017C1', bgClass: 'bg-blue-100 text-blue-900', description: '全国平均より30%以上効率的' },
+  A: { label: 'A', color: '#0031D8', bgClass: 'bg-cyan-100 text-cyan-900', description: '全国より10〜30%効率的' },
+  B: { label: 'B', color: '#757780', bgClass: 'bg-solid-gray-100 text-solid-gray-600', description: '全国平均水準' },
+  C: { label: 'C', color: '#D4920B', bgClass: 'bg-orange-100 text-orange-900', description: '全国より10〜30%非効率' },
+  D: { label: 'D', color: '#D32F2F', bgClass: 'bg-red-100 text-red-900', description: '全国より30%以上非効率' },
+}
+
 export const ILLUSTRATION_MAP: Record<StatusLevel, readonly string[]> = {
   excellent: ['s_human01.png', 's_human05.png', 's_human09.png', 's_human13.png', 's_human17.png', 's_human21.png'],
   good: ['s_human02.png', 's_human06.png', 's_human10.png', 's_human14.png', 's_human18.png', 's_human22.png'],

@@ -12,6 +12,7 @@ import {
   BudgetDonut,
   BudgetTrendPanel,
   BudgetScoreCross,
+  BudgetEfficiencyScoreCard,
 } from '@/components/charts/dynamic'
 import { getBudgetAllocations, BUDGET_PROGRAMS } from '@/data/budgetData'
 import {
@@ -19,6 +20,7 @@ import {
   getOverallBudgetStats,
   getProgramRanking,
   getBudgetTrendByCategory,
+  computeBudgetEfficiency,
 } from '@/data/budgetAnalysis'
 import { getBudgetFlowSummary } from '@/data/budgetFlowData'
 import { getResidents } from '@/data/sampleData'
@@ -83,6 +85,10 @@ export default function BudgetPage() {
   const expenditureFlows = useMemo(
     () => getExpenditureToWBMapping(flowData),
     [flowData],
+  )
+  const efficiencyData = useMemo(
+    () => computeBudgetEfficiency(crossAnalysis),
+    [crossAnalysis],
   )
   const pipelineData = useMemo(
     () => sortPipelineData(
@@ -188,7 +194,24 @@ export default function BudgetPage() {
         </Card>
       </section>
 
-      {/* Section 5: Pipeline Cards (NEW: メインビジュアライゼーション) */}
+      {/* Section 5: Budget Efficiency Score (CPP Analysis) */}
+      <section>
+        <Card>
+          <CardHeader>
+            <h2 className="text-std-17B-170 text-solid-gray-900">
+              予算効率スコア（コスト/ポイント分析）
+            </h2>
+            <p className="text-dns-14N-130 text-solid-gray-500 mt-0.5">
+              1人あたり予算でスコアを1pt改善するコストを全国平均と比較
+            </p>
+          </CardHeader>
+          <CardBody>
+            <BudgetEfficiencyScoreCard data={efficiencyData} />
+          </CardBody>
+        </Card>
+      </section>
+
+      {/* Section 6: Pipeline Cards (メインビジュアライゼーション) */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-std-20B-160 text-solid-gray-900">

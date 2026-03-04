@@ -206,6 +206,34 @@ export interface CrossAnalysisPoint {
   readonly objectiveEI: number       // 客観REI
 }
 
+// ===== 予算効率スコア（Cost Per Point）モデル =====
+
+export type EfficiencyGrade = 'S' | 'A' | 'B' | 'C' | 'D'
+
+export interface CostPerPoint {
+  readonly subjective: number   // ¥ per 1pt subjective (0-10 scale)
+  readonly objective: number    // ¥ per 1pt objective (normalized to 0-10)
+  readonly combined: number     // ¥ per 1pt combined average
+}
+
+export interface BudgetEfficiencyMetrics {
+  readonly categoryId: CategoryId
+  readonly label: string
+  readonly color: string
+  readonly budgetPerCapita: number
+  readonly nationalBudgetPerCapita: number
+  readonly subjectiveScore: number
+  readonly objectiveScore: number       // normalized to 0-10
+  readonly localCPP: CostPerPoint
+  readonly nationalCPP: CostPerPoint
+  readonly efficiencyRatio: CostPerPoint  // nationalCPP / localCPP, >1 = more efficient
+  readonly grade: EfficiencyGrade         // combined grade
+  readonly gradeDetail: {
+    readonly subjective: EfficiencyGrade
+    readonly objective: EfficiencyGrade
+  }
+}
+
 export type InsightType =
   | 'high_spend_low_result'
   | 'low_spend_high_result'
