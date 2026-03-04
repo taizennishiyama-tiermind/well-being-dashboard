@@ -36,14 +36,14 @@ import {
 import type { FiscalYear } from '@/data/types'
 
 const SORT_OPTIONS: readonly { readonly key: PipelineSortKey; readonly label: string }[] = [
-  { key: 'efficiency', label: '効率順' },
+  { key: 'efficiencyIndex', label: '効率順' },
   { key: 'budget', label: '予算額順' },
   { key: 'subjective', label: '住民実感順' },
 ]
 
 export default function BudgetPage() {
   const [selectedFY, setSelectedFY] = useState<FiscalYear>('2025')
-  const [sortKey, setSortKey] = useState<PipelineSortKey>('efficiency')
+  const [sortKey, setSortKey] = useState<PipelineSortKey>('efficiencyIndex')
 
   const allocations = getBudgetAllocations()
   const populationCount = 72000

@@ -42,7 +42,7 @@ export function CategoryPipelineCard({ data }: CategoryPipelineCardProps) {
               {badge.label}
             </span>
             <span className="text-dns-14N-130 text-solid-gray-500">
-              効率{data.efficiency.toFixed(1)}
+              EI {data.efficiencyIndex}
             </span>
           </div>
         </div>

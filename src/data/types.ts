@@ -182,6 +182,14 @@ export interface CategoryBudgetSummary {
   readonly yearOverYearChange: number
 }
 
+// ===== 全国ベンチマーク =====
+
+export interface NationalBenchmark {
+  readonly budgetPerCapita: number
+  readonly subjectiveScore: number   // 0-10
+  readonly objectiveScore: number    // 0-100
+}
+
 // ===== クロス分析モデル =====
 
 export interface CrossAnalysisPoint {
@@ -190,13 +198,12 @@ export interface CrossAnalysisPoint {
   readonly subjectiveScore: number
   readonly objectiveComposite: number
   readonly budgetPerCapita: number
-  readonly nationalBenchmarkPerCapita: number
+  readonly nationalBenchmark: NationalBenchmark
   readonly executionRate: number
   readonly gap: number
-  readonly efficiency: number
-  readonly subjectiveEfficiency: number
-  readonly objectiveEfficiency: number
-  readonly nationalEfficiency: number
+  readonly efficiencyIndex: number   // REI: 100=全国平均, >100=高効率
+  readonly subjectiveEI: number      // 主観REI
+  readonly objectiveEI: number       // 客観REI
 }
 
 export type InsightType =

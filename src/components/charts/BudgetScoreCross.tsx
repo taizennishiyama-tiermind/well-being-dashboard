@@ -10,13 +10,13 @@ interface BudgetScoreCrossProps {
 }
 
 function getEfficiencyRank(points: readonly CrossAnalysisPoint[], current: CrossAnalysisPoint): number {
-  const sorted = [...points].sort((a, b) => b.efficiency - a.efficiency)
+  const sorted = [...points].sort((a, b) => b.efficiencyIndex - a.efficiencyIndex)
   return sorted.findIndex((p) => p.categoryId === current.categoryId) + 1
 }
 
 function getEfficiencyBadge(point: CrossAnalysisPoint): { label: string; className: string } {
-  if (point.efficiency >= 5) return { label: '高効率', className: 'bg-cyan-100 text-cyan-900' }
-  if (point.efficiency >= 3) return { label: '標準', className: 'bg-solid-gray-100 text-solid-gray-600' }
+  if (point.efficiencyIndex >= 110) return { label: '高効率', className: 'bg-cyan-100 text-cyan-900' }
+  if (point.efficiencyIndex >= 90) return { label: '標準', className: 'bg-solid-gray-100 text-solid-gray-600' }
   return { label: '要改善', className: 'bg-orange-100 text-orange-900' }
 }
 
@@ -26,14 +26,12 @@ function getScoreIndicator(score: number, threshold: { good: number; bad: number
   return { label: '要改善', color: '#D32F2F' }
 }
 
-function EfficiencyComparison({ label, value, national, color }: {
+function EfficiencyBar({ label, value, color }: {
   readonly label: string
   readonly value: number
-  readonly national: number
   readonly color: string
 }) {
-  const diff = value - national
-  const diffPct = national > 0 ? Math.round((diff / national) * 100) : 0
+  const diff = value - 100
   const isAbove = diff >= 0
 
   return (
@@ -41,10 +39,10 @@ function EfficiencyComparison({ label, value, national, color }: {
       <span className="text-[11px] text-solid-gray-500">{label}</span>
       <div className="flex items-center gap-2">
         <span className="text-oln-14B-100" style={{ color }}>
-          {value.toFixed(1)}
+          {value}
         </span>
         <span className={`text-[10px] font-bold ${isAbove ? 'text-blue-900' : 'text-red-900'}`}>
-          {isAbove ? '▲' : '▼'}{Math.abs(diffPct)}%
+          {isAbove ? '▲' : '▼'}{Math.abs(diff)}pt
         </span>
       </div>
     </div>
@@ -69,7 +67,6 @@ function BudgetBar({ budget, benchmark, maxBar }: {
         </span>
       </div>
       <div className="relative h-2 bg-solid-gray-100 rounded-full overflow-visible">
-        {/* Budget fill bar */}
         <div
           className="absolute top-0 left-0 h-full rounded-full"
           style={{
@@ -77,7 +74,6 @@ function BudgetBar({ budget, benchmark, maxBar }: {
             backgroundColor: '#264AF4',
           }}
         />
-        {/* Benchmark marker — always visible */}
         <div
           className="absolute top-[-3px] w-[2px] rounded-full"
           style={{
@@ -110,7 +106,7 @@ export const BudgetScoreCross = memo(function BudgetScoreCross({
         const badge = getEfficiencyBadge(point)
         const subjInd = getScoreIndicator(point.subjectiveScore, { good: 7.0, bad: 5.5 })
         const objInd = getScoreIndicator(point.objectiveComposite, { good: 55, bad: 45 })
-        const maxBar = Math.max(point.budgetPerCapita, point.nationalBenchmarkPerCapita) * 1.3
+        const maxBar = Math.max(point.budgetPerCapita, point.nationalBenchmark.budgetPerCapita) * 1.3
 
         return (
           <Card key={point.categoryId}>
@@ -131,7 +127,7 @@ export const BudgetScoreCross = memo(function BudgetScoreCross({
               {/* Budget Bar with national benchmark */}
               <BudgetBar
                 budget={point.budgetPerCapita}
-                benchmark={point.nationalBenchmarkPerCapita}
+                benchmark={point.nationalBenchmark.budgetPerCapita}
                 maxBar={maxBar}
               />
 
@@ -203,40 +199,32 @@ export const BudgetScoreCross = memo(function BudgetScoreCross({
                 </div>
               </div>
 
-              {/* Efficiency breakdown */}
+              {/* Efficiency Index (REI) */}
               <div className="pt-3 border-t border-solid-gray-100 space-y-1.5">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-dns-14N-130 text-solid-gray-600">効率スコア（予算1万円あたり）</span>
-                  <span className="text-[10px] text-solid-gray-400">
-                    全国基準 {point.nationalEfficiency.toFixed(1)}
-                  </span>
+                  <span className="text-dns-14N-130 text-solid-gray-600">効率指数（全国平均=100）</span>
                 </div>
-                <EfficiencyComparison
+                <EfficiencyBar
                   label="主観効率"
-                  value={point.subjectiveEfficiency}
-                  national={point.nationalEfficiency / 2}
+                  value={point.subjectiveEI}
                   color="#E8854A"
                 />
-                <EfficiencyComparison
+                <EfficiencyBar
                   label="客観効率"
-                  value={point.objectiveEfficiency}
-                  national={point.nationalEfficiency / 2}
+                  value={point.objectiveEI}
                   color="#0031D8"
                 />
                 <div className="flex items-center justify-between pt-1.5 border-t border-dashed border-solid-gray-200">
                   <span className="text-oln-14B-100 text-solid-gray-600">総合効率</span>
                   <div className="flex items-center gap-2">
                     <span className="text-std-17B-170 text-solid-gray-900">
-                      {point.efficiency.toFixed(1)}
+                      {point.efficiencyIndex}
                     </span>
                     {(() => {
-                      const diff = point.efficiency - point.nationalEfficiency
-                      const diffPct = point.nationalEfficiency > 0
-                        ? Math.round((diff / point.nationalEfficiency) * 100)
-                        : 0
+                      const diff = point.efficiencyIndex - 100
                       return (
                         <span className={`text-[10px] font-bold ${diff >= 0 ? 'text-blue-900' : 'text-red-900'}`}>
-                          {diff >= 0 ? '▲' : '▼'}{Math.abs(diffPct)}%
+                          {diff >= 0 ? '▲' : '▼'}{Math.abs(diff)}pt
                         </span>
                       )
                     })()}

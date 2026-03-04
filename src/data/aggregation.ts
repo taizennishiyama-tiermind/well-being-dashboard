@@ -319,16 +319,30 @@ export function getObjectiveCompositeByCategory(
   return Math.round((sum / relatedValues.length) * 10) / 10
 }
 
-// 全国市町村平均の1人あたり予算（カテゴリ別、円）
-// 出典想定: 総務省「地方財政状況調査」よりWell-Beingカテゴリに按分
-// ※ 全国平均に近い値に設定し、プラス・マイナスが混在するようにする
-const NATIONAL_BUDGET_BENCHMARK: Record<CategoryId, number> = {
-  health: 22000,
-  community: 9000,
-  diversity: 6500,
-  childcare: 26000,
-  efficacy: 8500,
-  transport: 18000,
+// 全国市町村平均ベンチマーク（カテゴリ別、予算+スコア）
+// 出典想定: 総務省「地方財政状況調査」＋内閣府 Well-Being指標調査
+// ※ 日高郡の予算と比べてプラス・マイナスが混在するよう設定
+import type { NationalBenchmark } from './types'
+
+export const NATIONAL_BENCHMARKS: Record<CategoryId, NationalBenchmark> = {
+  health:     { budgetPerCapita: 35000, subjectiveScore: 6.2, objectiveScore: 55 },
+  community:  { budgetPerCapita: 20000, subjectiveScore: 5.8, objectiveScore: 48 },
+  diversity:  { budgetPerCapita: 12000, subjectiveScore: 5.0, objectiveScore: 50 },
+  childcare:  { budgetPerCapita: 45000, subjectiveScore: 5.5, objectiveScore: 58 },
+  efficacy:   { budgetPerCapita: 15000, subjectiveScore: 6.0, objectiveScore: 52 },
+  transport:  { budgetPerCapita: 28000, subjectiveScore: 5.2, objectiveScore: 55 },
+}
+
+// 相対効率指数（REI）: 100=全国平均、>100=高効率、<100=非効率
+// REI = (localScore × nationalBudget) / (nationalScore × localBudget) × 100
+function calculateEI(
+  localScore: number,
+  localBudget: number,
+  nationalScore: number,
+  nationalBudget: number,
+): number {
+  if (localBudget <= 0 || nationalBudget <= 0 || nationalScore <= 0) return 100
+  return Math.round((localScore * nationalBudget) / (nationalScore * localBudget) * 100)
 }
 
 export function getCrossAnalysisData(
@@ -348,30 +362,20 @@ export function getCrossAnalysisData(
     const subjectiveScore = agg?.avgSubjective ?? 5
     const budgetPerCapita = budgetSummary?.budgetPerCapita ?? 0
     const executionRate = budgetSummary?.executionRate ?? 0
-    const nationalBenchmarkPerCapita = NATIONAL_BUDGET_BENCHMARK[catMeta.id]
+    const benchmark = NATIONAL_BENCHMARKS[catMeta.id]
 
     // gap: 両方を0-10スケールに揃えてポイント差を算出
     const objOn10Scale = objectiveComposite / 10
     const gap = Math.round((subjectiveScore - objOn10Scale) * 10) / 10
 
-    // efficiency: 予算1万円あたりの成果スコア
-    const budgetMan = budgetPerCapita / 10000
-    const objNormalized = objectiveComposite / 10 // 0-100 → 0-10スケール
-    const subjectiveEfficiency = budgetMan > 0
-      ? Math.round((subjectiveScore / budgetMan) * 100) / 100
-      : 0
-    const objectiveEfficiency = budgetMan > 0
-      ? Math.round((objNormalized / budgetMan) * 100) / 100
-      : 0
-    const efficiency = budgetMan > 0
-      ? Math.round(((subjectiveScore + objNormalized) / budgetMan) * 100) / 100
-      : 0
+    // REI計算: スコア/予算の比率を全国対比で指数化
+    const nationalObjOn10 = benchmark.objectiveScore / 10
+    const localCombined = subjectiveScore + objOn10Scale
+    const nationalCombined = benchmark.subjectiveScore + nationalObjOn10
 
-    // 全国平均効率: 全国平均予算で全国平均水準スコア(主観5.5, 客観5.0)を達成と仮定
-    const nationalBudgetMan = nationalBenchmarkPerCapita / 10000
-    const nationalEfficiency = nationalBudgetMan > 0
-      ? Math.round(((5.5 + 5.0) / nationalBudgetMan) * 100) / 100
-      : 0
+    const efficiencyIndex = calculateEI(localCombined, budgetPerCapita, nationalCombined, benchmark.budgetPerCapita)
+    const subjectiveEI = calculateEI(subjectiveScore, budgetPerCapita, benchmark.subjectiveScore, benchmark.budgetPerCapita)
+    const objectiveEI = calculateEI(objOn10Scale, budgetPerCapita, nationalObjOn10, benchmark.budgetPerCapita)
 
     return {
       categoryId: catMeta.id,
@@ -379,13 +383,12 @@ export function getCrossAnalysisData(
       subjectiveScore,
       objectiveComposite,
       budgetPerCapita,
-      nationalBenchmarkPerCapita,
+      nationalBenchmark: benchmark,
       executionRate,
       gap,
-      efficiency,
-      subjectiveEfficiency,
-      objectiveEfficiency,
-      nationalEfficiency,
+      efficiencyIndex,
+      subjectiveEI,
+      objectiveEI,
     }
   })
 }
@@ -465,7 +468,7 @@ export function generateDynamicInsights(
         [
           `予算規模: ${Math.round(point.budgetPerCapita).toLocaleString()}円/人`,
           `客観スコア: ${point.objectiveComposite}/100`,
-          `効率指数: ${point.efficiency}`,
+          `効率指数: ${point.efficiencyIndex}（全国平均=100）`,
         ],
         `この分野の成功要因を分析し、他分野への横展開を検討してください。また、さらなる予算拡充による成果向上の余地があります。`,
         6.0, [], relatedProgs,

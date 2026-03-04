@@ -123,8 +123,8 @@ function buildKeyMetrics(
   const metrics: KeyMetric[] = []
 
   if (type === 'high_spend_low_result' || type === 'low_spend_high_result') {
-    const benchmarkMan = (point.nationalBenchmarkPerCapita / 10000).toFixed(1)
-    const ratio = Math.round((point.budgetPerCapita / point.nationalBenchmarkPerCapita) * 100)
+    const benchmarkMan = (point.nationalBenchmark.budgetPerCapita / 10000).toFixed(1)
+    const ratio = Math.round((point.budgetPerCapita / point.nationalBenchmark.budgetPerCapita) * 100)
     metrics.push({
       label: '1人あたり予算',
       value: (point.budgetPerCapita / 10000).toFixed(1),
@@ -214,7 +214,7 @@ function buildHypotheses(
         statement: `住民が「${worstSub.label}」に不満を感じている（${worstSub.avgScore}/10）一方、客観指標「${worstInd.label}」も${worstInd.score}/100と低く、予算の使途が住民ニーズと乖離している可能性がある。`,
         supportingEvidence: [
           `予算規模: ${Math.round(point.budgetPerCapita).toLocaleString()}円/人`,
-          `効率指数: ${point.efficiency}`,
+          `効率指数: ${point.efficiencyIndex}（全国平均=100）`,
         ],
         confidence: '中',
       })
@@ -225,7 +225,7 @@ function buildHypotheses(
     hypotheses.push({
       statement: `限られた予算（${(point.budgetPerCapita / 10000).toFixed(1)}万円/人）でも客観スコア${point.objectiveComposite}を達成しており、既存リソースの効率的な活用や地域の自発的な取り組みが機能している可能性がある。`,
       supportingEvidence: [
-        `効率指数: ${point.efficiency}（予算1万円あたりの成果）`,
+        `効率指数: ${point.efficiencyIndex}（全国平均=100）`,
         worstSub ? `ただし「${worstSub.label}」は${worstSub.avgScore}/10と改善余地あり` : '',
       ].filter(Boolean),
       confidence: '中',
@@ -452,7 +452,7 @@ export function generateEnhancedInsights(
         severity: 'critical',
         categoryId: point.categoryId,
         title: `${point.label}: 予算投入に見合わない成果`,
-        summary: `1人あたり${(point.budgetPerCapita / 10000).toFixed(1)}万円の予算を投入（全国平均${(point.nationalBenchmarkPerCapita / 10000).toFixed(1)}万円）していますが、客観指標の平均スコアは${point.objectiveComposite}/100と全国平均を下回っています。${subInds[0] ? `特に「${subInds[0].label}」の住民満足度が${subInds[0].avgScore}/10と低い状況です。` : ''}`,
+        summary: `1人あたり${(point.budgetPerCapita / 10000).toFixed(1)}万円の予算を投入（全国平均${(point.nationalBenchmark.budgetPerCapita / 10000).toFixed(1)}万円）していますが、客観指標の平均スコアは${point.objectiveComposite}/100と全国平均を下回っています。${subInds[0] ? `特に「${subInds[0].label}」の住民満足度が${subInds[0].avgScore}/10と低い状況です。` : ''}`,
         keyMetrics: buildKeyMetrics('high_spend_low_result', point, worstInds[0], subInds[0]),
         subIndicators: subInds.slice(0, 4),
         relatedIndicators: worstInds,
@@ -477,7 +477,7 @@ export function generateEnhancedInsights(
         severity: 'opportunity',
         categoryId: point.categoryId,
         title: `${point.label}: 効率的な成果を実現`,
-        summary: `比較的少ない予算（${(point.budgetPerCapita / 10000).toFixed(1)}万円/人、全国平均${(point.nationalBenchmarkPerCapita / 10000).toFixed(1)}万円）で客観スコア${point.objectiveComposite}/100を達成。効率指数${point.efficiency}は高水準です。`,
+        summary: `比較的少ない予算（${(point.budgetPerCapita / 10000).toFixed(1)}万円/人、全国平均${(point.nationalBenchmark.budgetPerCapita / 10000).toFixed(1)}万円）で客観スコア${point.objectiveComposite}/100を達成。効率指数${point.efficiencyIndex}（全国平均=100）は高水準です。`,
         keyMetrics: buildKeyMetrics('low_spend_high_result', point, worstInds[0], subInds[0]),
         subIndicators: subInds.slice(0, 4),
         relatedIndicators: worstInds,
@@ -517,11 +517,11 @@ export function generateEnhancedInsights(
 
   // 3.5. efficiency_gap — 主観効率と客観効率の乖離
   for (const point of crossAnalysis) {
-    const effRatio = point.objectiveEfficiency > 0
-      ? point.subjectiveEfficiency / point.objectiveEfficiency
+    const eiRatio = point.objectiveEI > 0
+      ? point.subjectiveEI / point.objectiveEI
       : 1
-    const isSubjHigh = effRatio > 1.5 // 主観効率が客観の1.5倍以上
-    const isObjHigh = effRatio < 0.67  // 客観効率が主観の1.5倍以上
+    const isSubjHigh = eiRatio > 1.3 // 主観EIが客観の1.3倍以上
+    const isObjHigh = eiRatio < 0.77  // 客観EIが主観の1.3倍以上
 
     if (isSubjHigh || isObjHigh) {
       const subInds = getSubIndicatorAvg(residents, point.categoryId)
@@ -529,8 +529,8 @@ export function generateEnhancedInsights(
       const progs = resolvePrograms(point.categoryId, programs, allocations)
 
       const direction = isSubjHigh
-        ? `住民満足度（主観効率${point.subjectiveEfficiency.toFixed(1)}）は予算に見合う成果が出ていますが、客観指標（客観効率${point.objectiveEfficiency.toFixed(1)}）には反映されていません`
-        : `客観指標（客観効率${point.objectiveEfficiency.toFixed(1)}）は良好ですが、住民の実感（主観効率${point.subjectiveEfficiency.toFixed(1)}）には結びついていません`
+        ? `住民満足度（主観EI ${point.subjectiveEI}）は予算に見合う成果が出ていますが、客観指標（客観EI ${point.objectiveEI}）には反映されていません`
+        : `客観指標（客観EI ${point.objectiveEI}）は良好ですが、住民の実感（主観EI ${point.subjectiveEI}）には結びついていません`
 
       const actionFocus = isSubjHigh
         ? '客観指標の改善に繋がる事業設計（施設整備・制度拡充等）の強化'
@@ -542,35 +542,35 @@ export function generateEnhancedInsights(
         severity: 'warning',
         categoryId: point.categoryId,
         title: `${point.label}: ${isSubjHigh ? '主観に効くが客観に未反映' : '客観は良いが住民実感に未到達'}`,
-        summary: `${direction}。予算${(point.budgetPerCapita / 10000).toFixed(1)}万円/人（全国平均${(point.nationalBenchmarkPerCapita / 10000).toFixed(1)}万円）の配分先を見直すことで、${isSubjHigh ? '客観指標' : '住民満足度'}の改善が期待できます。`,
+        summary: `${direction}。予算${(point.budgetPerCapita / 10000).toFixed(1)}万円/人（全国平均${(point.nationalBenchmark.budgetPerCapita / 10000).toFixed(1)}万円）の配分先を見直すことで、${isSubjHigh ? '客観指標' : '住民満足度'}の改善が期待できます。`,
         keyMetrics: [
           {
-            label: '主観効率',
-            value: point.subjectiveEfficiency.toFixed(1),
-            unit: 'pt/万円',
+            label: '主観効率指数',
+            value: String(point.subjectiveEI),
+            unit: '（全国=100）',
             dataType: '主観',
-            severity: point.subjectiveEfficiency > point.nationalEfficiency / 2 ? 'good' : 'bad',
+            severity: point.subjectiveEI >= 100 ? 'good' : 'bad',
           },
           {
-            label: '客観効率',
-            value: point.objectiveEfficiency.toFixed(1),
-            unit: 'pt/万円',
+            label: '客観効率指数',
+            value: String(point.objectiveEI),
+            unit: '（全国=100）',
             dataType: '客観',
-            severity: point.objectiveEfficiency > point.nationalEfficiency / 2 ? 'good' : 'bad',
+            severity: point.objectiveEI >= 100 ? 'good' : 'bad',
           },
           {
-            label: '総合効率',
-            value: point.efficiency.toFixed(1),
-            unit: 'pt/万円',
+            label: '総合効率指数',
+            value: String(point.efficiencyIndex),
+            unit: '（全国=100）',
             dataType: '予算',
-            severity: point.efficiency > point.nationalEfficiency ? 'good' : 'bad',
+            severity: point.efficiencyIndex >= 100 ? 'good' : 'bad',
           },
           {
-            label: '全国基準効率',
-            value: point.nationalEfficiency.toFixed(1),
-            unit: 'pt/万円',
+            label: '主客観EI比',
+            value: eiRatio.toFixed(2),
+            unit: '倍',
             dataType: '予算',
-            severity: 'neutral',
+            severity: Math.abs(eiRatio - 1) > 0.3 ? 'bad' : 'neutral',
           },
         ],
         subIndicators: subInds.slice(0, 4),
@@ -582,7 +582,7 @@ export function generateEnhancedInsights(
               ? `住民は${point.label}に一定の満足感を持つが、統計データ（客観指標${point.objectiveComposite}/100）は全国平均に達していない。ソフト事業（啓発・相談等）は住民実感に効果があるが、ハード面（施設・制度）の整備が不十分な可能性がある。`
               : `客観的なデータ（${point.objectiveComposite}/100）は水準にあるが、住民満足度（${point.subjectiveScore.toFixed(1)}/10）が低い。施策の成果が住民に伝わっていない、または住民のニーズと施策のマッチングにずれがある可能性がある。`,
             supportingEvidence: [
-              `主観効率: ${point.subjectiveEfficiency.toFixed(1)} / 客観効率: ${point.objectiveEfficiency.toFixed(1)}（${(effRatio).toFixed(1)}倍の差）`,
+              `主観EI: ${point.subjectiveEI} / 客観EI: ${point.objectiveEI}（${eiRatio.toFixed(2)}倍の差）`,
               subInds[0] ? `最低設問「${subInds[0].label}」: ${subInds[0].avgScore}/10` : '',
               worstInds[0] ? `最低客観指標「${worstInds[0].label}」: ${worstInds[0].score}/100` : '',
             ].filter(Boolean),

@@ -89,7 +89,7 @@ export interface CategoryPipelineData {
   readonly objectiveComposite: number
   readonly subjectiveScore: number
   readonly gap: number
-  readonly efficiency: number
+  readonly efficiencyIndex: number
   readonly programCount: number
   readonly programs: readonly {
     readonly name: string
@@ -99,7 +99,7 @@ export interface CategoryPipelineData {
   }[]
 }
 
-export type PipelineSortKey = 'efficiency' | 'budget' | 'subjective'
+export type PipelineSortKey = 'efficiencyIndex' | 'budget' | 'subjective'
 
 export function getCategoryPipelineData(
   crossAnalysis: readonly CrossAnalysisPoint[],
@@ -141,7 +141,7 @@ export function getCategoryPipelineData(
       objectiveComposite: cross?.objectiveComposite ?? 50,
       subjectiveScore: cross?.subjectiveScore ?? 5,
       gap: cross?.gap ?? 0,
-      efficiency: cross?.efficiency ?? 0,
+      efficiencyIndex: cross?.efficiencyIndex ?? 100,
       programCount: catPrograms.length,
       programs,
     }
@@ -154,8 +154,8 @@ export function sortPipelineData(
 ): readonly CategoryPipelineData[] {
   const sorted = [...data]
   switch (sortKey) {
-    case 'efficiency':
-      return sorted.sort((a, b) => b.efficiency - a.efficiency)
+    case 'efficiencyIndex':
+      return sorted.sort((a, b) => b.efficiencyIndex - a.efficiencyIndex)
     case 'budget':
       return sorted.sort((a, b) => b.totalBudget - a.totalBudget)
     case 'subjective':
@@ -167,11 +167,11 @@ export function getEfficiencyBadge(data: CategoryPipelineData): {
   readonly label: string
   readonly className: string
 } {
-  if (data.budgetPerCapita > 15000 && data.objectiveComposite < 50) {
-    return { label: '要改善', className: 'bg-red-100 text-red-900' }
-  }
-  if (data.budgetPerCapita < 12000 && data.objectiveComposite > 55) {
+  if (data.efficiencyIndex >= 110) {
     return { label: '高効率', className: 'bg-cyan-100 text-cyan-900' }
   }
-  return { label: '標準', className: 'bg-solid-gray-100 text-solid-gray-600' }
+  if (data.efficiencyIndex >= 90) {
+    return { label: '標準', className: 'bg-solid-gray-100 text-solid-gray-600' }
+  }
+  return { label: '要改善', className: 'bg-red-100 text-red-900' }
 }
